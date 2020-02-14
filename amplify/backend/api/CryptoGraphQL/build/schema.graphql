@@ -1,0 +1,161 @@
+type Coin {
+  id: ID!
+  clientId: ID
+  name: String!
+  symbol: String!
+  price: Float!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelCoinConnection {
+  items: [Coin]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelCoinFilterInput {
+  id: ModelIDInput
+  clientId: ModelIDInput
+  name: ModelStringInput
+  symbol: ModelStringInput
+  price: ModelFloatInput
+  and: [ModelCoinFilterInput]
+  or: [ModelCoinFilterInput]
+  not: ModelCoinFilterInput
+}
+
+type Query {
+  getCoin(id: ID!): Coin
+  listCoins(filter: ModelCoinFilterInput, limit: Int, nextToken: String): ModelCoinConnection
+}
+
+input CreateCoinInput {
+  id: ID
+  clientId: ID
+  name: String!
+  symbol: String!
+  price: Float!
+}
+
+input UpdateCoinInput {
+  id: ID!
+  clientId: ID
+  name: String
+  symbol: String
+  price: Float
+}
+
+input DeleteCoinInput {
+  id: ID
+}
+
+type Mutation {
+  createCoin(input: CreateCoinInput!, condition: ModelCoinConditionInput): Coin
+  updateCoin(input: UpdateCoinInput!, condition: ModelCoinConditionInput): Coin
+  deleteCoin(input: DeleteCoinInput!, condition: ModelCoinConditionInput): Coin
+}
+
+input ModelCoinConditionInput {
+  clientId: ModelIDInput
+  name: ModelStringInput
+  symbol: ModelStringInput
+  price: ModelFloatInput
+  and: [ModelCoinConditionInput]
+  or: [ModelCoinConditionInput]
+  not: ModelCoinConditionInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Subscription {
+  onCreateCoin: Coin @aws_subscribe(mutations: ["createCoin"])
+  onUpdateCoin: Coin @aws_subscribe(mutations: ["updateCoin"])
+  onDeleteCoin: Coin @aws_subscribe(mutations: ["deleteCoin"])
+}
